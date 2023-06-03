@@ -1,4 +1,3 @@
-# social-network-project
 <h1 align="center">
 
 
