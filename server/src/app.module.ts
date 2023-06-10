@@ -12,6 +12,7 @@ import { AuthController } from './auth/auth.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './models/user.model';
 import { Post } from './models/post.model';
+import { Token } from './models/token.model';
 
 @Module({
 
@@ -20,7 +21,7 @@ import { Post } from './models/post.model';
     SequelizeModule.forRoot({
       dialect: 'postgres',
       uri: process.env.PGURI,
-      models: [User, Post],
+      models: [User, Post, Token],
       autoLoadModels: true
     }),
     ServeStaticModule.forRoot({

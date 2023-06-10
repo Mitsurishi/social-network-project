@@ -15,12 +15,12 @@ export class UserService {
 
     ) { }
 
-    async createUser(registrationDto: RegistrationDto, profilePicture) {
+    async createUser(registrationDto: RegistrationDto, profilePicture, activationLink: string) {
 
         try {
             const profilePicturePath = this.fileService.createFile(FileType.IMAGE, profilePicture)
             const hashPassword = await this.encryptPassword(registrationDto.password);
-            const user = await this.userRepository.create({ ...registrationDto, password: hashPassword, profilePicturePath: profilePicturePath })
+            const user = await this.userRepository.create({ ...registrationDto, password: hashPassword, activationLink: activationLink, profilePicturePath: profilePicturePath })
             return user;
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST)

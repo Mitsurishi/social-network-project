@@ -10,7 +10,7 @@ export class PostController {
 
     @Post('/create')
     @UseInterceptors(FileInterceptor('file'))
-    createPost(@UploadedFile() file: Express.Multer.File, @Body() createPostdto: CreatePostDto) {
+    async createPost(@UploadedFile() file: Express.Multer.File, @Body() createPostdto: CreatePostDto) {
 
         const postPicture = file;
         return this.postService.createPost(postPicture, createPostdto);
@@ -18,21 +18,21 @@ export class PostController {
     }
 
     @Get('/posts')
-    getFeedPosts() {
+    async getFeedPosts() {
 
         return this.postService.getFeedPosts();
 
     }
 
     @Get('/:userId/posts')
-    getUserPosts(@Param('userId') userId: number) {
+    async getUserPosts(@Param('userId') userId: number) {
 
         return this.postService.getUserPosts(userId);
 
     }
 
     @Patch('/:id/like')
-    likeUnlikePost(@Param('id') id: number, @Body() userId: string) {
+    async likeUnlikePost(@Param('id') id: number, @Body() userId: string) {
 
         return this.postService.likeUnlikePost(id, userId);
 

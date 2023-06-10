@@ -7,28 +7,28 @@ export class UserController {
     constructor(private userService: UserService) { }
 
     @Get('/:userId')
-    getUserById(@Param('userId') userId: number) {
+    async getUserById(@Param('userId') userId: number) {
 
         return this.userService.getUserById(userId);
 
     }
 
     @Get('/:userId/friends')
-    getUserFriends(@Param('userId') userId: number) {
+    async getUserFriends(@Param('userId') userId: number) {
 
         return this.userService.getUserFriends(userId);
 
     }
 
     @Patch('/:userId/:friendId')
-    addRemoveFriend(@Param('userId') userId: number, @Param('friendId') friendId: number) {
+    async addRemoveFriend(@Param('userId') userId: number, @Param('friendId') friendId: number) {
 
         return this.userService.addRemoveFriend(userId, friendId);
 
     }
 
     @Delete('/delete/:id')
-    deleteUserById(@Param('id') id: string) {
+    async deleteUserById(@Param('id') id: string) {
 
         return this.userService.deleteUserById(+id);
 

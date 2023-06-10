@@ -1,5 +1,6 @@
-import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Post } from "./post.model";
+import { Token } from "./token.model";
 
 
 interface UserCreationAttrs {
@@ -7,6 +8,8 @@ interface UserCreationAttrs {
     email: string;
 
     password: string;
+
+    activationLink: string;
 
     firstName: string;
 
@@ -32,6 +35,12 @@ export class User extends Model<User, UserCreationAttrs>{
     @Column({ type: DataType.STRING, allowNull: false })
     password: string;
 
+    @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
+    isActivated: boolean;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    activationLink: boolean;
+
     @Column({ type: DataType.STRING, allowNull: false })
     firstName: string;
 
@@ -52,6 +61,9 @@ export class User extends Model<User, UserCreationAttrs>{
         defaultValue: []
     })
     friends: number[];
+
+    @HasOne(() => Token)
+    refreshToken: Token;
 
     @HasMany(() => Post)
     posts: Post[];
