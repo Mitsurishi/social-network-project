@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './services/auth.service';
-import { JwtModule, JwtModuleAsyncOptions, JwtModuleOptions } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { FileService } from 'src/file/file.service';
 import { UserModule } from 'src/user/user.module';
@@ -12,11 +12,13 @@ import { MailService } from './services/mail.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Token } from 'src/models/token.model';
 import { TokenService } from './services/token.service';
+import { RefreshTokenStrategy } from './strategy/jwt-refresh.strategy';
+import { JwtStrategy } from './strategy/jwt-access.strategy';
 
 @Module({
 
     controllers: [AuthController],
-    providers: [AuthService, UserService, FileService, MailService, TokenService],
+    providers: [AuthService, UserService, FileService, MailService, TokenService, RefreshTokenStrategy, JwtStrategy],
     imports: [
         UserModule,
         SequelizeModule.forFeature([User, Post, Token]),
@@ -27,14 +29,14 @@ import { TokenService } from './services/token.service';
                 return {
                     secret: configService.get('JWT_ACCESS_SECRET')
                 }
-            }
-        })
+            },
+        }),
+        ConfigModule,
     ],
     exports: [
         UserService,
         AuthService,
         JwtModule,
-        MailService,
         TokenService
     ]
 

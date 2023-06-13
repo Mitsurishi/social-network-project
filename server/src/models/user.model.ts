@@ -39,7 +39,7 @@ export class User extends Model<User, UserCreationAttrs>{
     isActivated: boolean;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    activationLink: boolean;
+    activationLink: string;
 
     @Column({ type: DataType.STRING, allowNull: false })
     firstName: string;

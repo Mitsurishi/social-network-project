@@ -23,7 +23,7 @@ export class Token extends Model<Token, TokenCreationAttrs>{
     @Column({ type: DataType.INTEGER, allowNull: false })
     userId: number;
 
-    @BelongsTo(() => User)
+    @BelongsTo(() => User, { onDelete: 'CASCADE' })
     user: User;
 
 }

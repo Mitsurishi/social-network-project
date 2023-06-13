@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -13,11 +13,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './models/user.model';
 import { Post } from './models/post.model';
 import { Token } from './models/token.model';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
 
   imports: [
-    ConfigModule.forRoot({}),
+    ConfigModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       uri: process.env.PGURI,
@@ -26,6 +27,16 @@ import { Token } from './models/token.model';
     }),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.SMTP_HOST,
+        port: +process.env.SMTP_PORT,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD
+        },
+      },
     }),
     AuthModule,
     FileModule,

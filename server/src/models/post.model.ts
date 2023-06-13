@@ -47,7 +47,7 @@ export class Post extends Model<Post, PostCreationAttrs>{
     @Column({ allowNull: false })
     userId: number;
 
-    @BelongsTo(() => User)
+    @BelongsTo(() => User, { onDelete: 'CASCADE' })
     user: User;
 
 }

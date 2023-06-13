@@ -28,13 +28,20 @@ export class UserService {
 
     }
 
+    async getAllUsers() {
+
+        const users = this.userRepository.findAll();
+        return users;
+
+    }
+
     async getUserById(userId: number): Promise<User> {
 
         try {
             const user = await this.userRepository.findByPk(userId);
             return user;
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+            throw new HttpException(error.message, HttpStatus.NOT_FOUND)
         }
 
     }
@@ -45,7 +52,7 @@ export class UserService {
             const friends = await this.userRepository.findByPk(userId, { attributes: ['friends'] })
             return friends;
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+            throw new HttpException(error.message, HttpStatus.NOT_FOUND)
         }
 
     }

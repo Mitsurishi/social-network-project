@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Redirect, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegistrationDto } from './dto/registration.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 const tokenMaxAge: number = 30 * 24 * 60 * 60 * 1000;
 
@@ -24,30 +24,41 @@ export class AuthController {
     }
 
     @Post('/login')
-    async login(@Body() loginDto: LoginDto) {
+    async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) response: Response) {
 
-        return this.authService.login(loginDto);
+        const result = await this.authService.login(loginDto);
+        response.cookie('refreshToken', result.tokens.refresh_token, { maxAge: tokenMaxAge, httpOnly: true });
+        return result;
 
     }
 
     @Post('/logout')
-    async logout() {
+    async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
 
-        return this.authService.logout();
+        const refreshToken = request.cookies.refreshToken;
+        const result = await this.authService.logout(refreshToken);
+        response.clearCookie('refreshToken');
+        return result;
 
     }
 
     @Get('/activate/:link')
-    async activateAccount(@Param('link') link: string) {
+    @Redirect(/*process.env.CLIENT_URL*/'http://ya.ru')
+    async activateAccount(@Req() request: Request) {
 
-        return this.authService.activateAccount(link);
+        const link = request.params.link;
+        const activationLink = `${process.env.API_URL}/auth/activate/${link}`
+        return this.authService.activateAccount(activationLink);
 
     }
 
     @Get('/refresh')
-    async getTokens() {
+    async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
 
-        return this.authService.getTokens();
+        const refreshToken = request.cookies.refreshToken;
+        const result = await this.authService.refresh(refreshToken);
+        response.cookie('refreshToken', result.tokens.refresh_token, { maxAge: tokenMaxAge, httpOnly: true });
+        return result;
 
     }
 
