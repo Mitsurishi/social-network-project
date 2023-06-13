@@ -12,16 +12,10 @@ import { User } from 'src/models/user.model';
     providers: [UserService, FileService],
     imports: [
         SequelizeModule.forFeature([User]),
-        JwtModule.register({
-            secret: process.env.JWT_SECRET_KEY || 'SECRET',
-            signOptions: {
-                expiresIn: '24h'
-            }
-        })
+        JwtModule,
     ],
     exports: [
         UserService,
-        JwtModule,
     ]
 
 })

@@ -5,13 +5,15 @@ import { FileService } from 'src/file/file.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/models/user.model';
 import { Post } from 'src/models/post.model';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
 
     controllers: [PostController],
     providers: [PostService, FileService],
     imports: [
-        SequelizeModule.forFeature([User, Post])
+        SequelizeModule.forFeature([User, Post]),
+        JwtModule,
     ],
     exports: [PostService]
 
