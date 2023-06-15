@@ -32,7 +32,7 @@ export class AuthController {
 
     }
 
-    @Post('/logout')
+    @Get('/logout')
     async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
 
         const refreshToken = request.cookies.refreshToken;
@@ -43,7 +43,7 @@ export class AuthController {
     }
 
     @Get('/activate/:link')
-    @Redirect(/*process.env.CLIENT_URL*/'http://ya.ru')
+    @Redirect(process.env.CLIENT_URL)
     async activateAccount(@Req() request: Request) {
 
         const link = request.params.link;
@@ -56,6 +56,7 @@ export class AuthController {
     async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
 
         const refreshToken = request.cookies.refreshToken;
+        console.log(refreshToken);
         const result = await this.authService.refresh(refreshToken);
         response.cookie('refreshToken', result.tokens.refresh_token, { maxAge: tokenMaxAge, httpOnly: true });
         return result;

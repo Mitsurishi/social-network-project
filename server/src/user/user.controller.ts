@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAccessGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Request } from 'express';
 
 @UseGuards(JwtAccessGuard)
 @Controller('user')
@@ -9,8 +10,10 @@ export class UserController {
     constructor(private userService: UserService) { }
 
     @Get('/users')
-    async getAllUsers() {
+    async getAllUsers(@Req() request: Request) {
 
+        const refreshToken = request.cookies.refreshToken;
+        console.log(refreshToken);
         const users = await this.userService.getAllUsers();
         return users;
 

@@ -87,12 +87,12 @@ export class AuthService {
 
         try {
             if (!refreshToken) {
-                throw new UnauthorizedException()
+                throw new UnauthorizedException(HttpStatus.UNAUTHORIZED)
             }
             const result = this.tokenService.validateRefreshToken(refreshToken);
             const token = await this.tokenService.findToken(refreshToken);
             if (!result || !token) {
-                throw new UnauthorizedException()
+                throw new UnauthorizedException(HttpStatus.UNAUTHORIZED)
             }
             const user = await this.userRepository.findByPk(result.userId);
             const payload = { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName }
@@ -100,7 +100,7 @@ export class AuthService {
             await this.tokenService.saveToken(user.id, tokens.refresh_token)
             return { payload, tokens }
         } catch (error) {
-            throw new UnauthorizedException(error.message);
+            throw new UnauthorizedException(HttpStatus.UNAUTHORIZED);
         }
 
     }

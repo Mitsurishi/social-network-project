@@ -18,7 +18,7 @@ export class TokenService {
     async generateTokens(payload: TokenPayloadDto) {
 
         const accessToken = this.jwtService.sign(payload, {
-            expiresIn: '60m'
+            expiresIn: '15m'
         });
         const refreshToken = this.jwtService.sign(payload, {
             expiresIn: '30d'

@@ -1,7 +1,29 @@
-export interface ServerResponce<T> {
-    total_count: number
-    incomplete_results: boolean
-    items: T[]
+export interface ServerResponce {
+
+    payload: Payload;
+
+    tokens: Tokens;
+
+}
+
+export interface Payload {
+
+    id: number;
+
+    email: string;
+
+    firstName: string;
+
+    lastName: string;
+
+}
+
+export interface Tokens {
+
+    access_token: string;
+
+    refresh_token: string;
+
 }
 
 export interface IUser {
