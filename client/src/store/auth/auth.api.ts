@@ -1,10 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IRegistration } from '../../models/models'
+import { ILogin, IRegistration } from '../../models/models'
+import { RootState } from '../store'
 
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5000',
+        prepareHeaders: (headers, { getState }) => {
+            const token = (getState() as RootState).auth.token
+            if (token) {
+                headers.set('authorization', `Bearer ${token}`)
+            }
+            return headers;
+        }
     }),
     endpoints: build => ({
         registration: build.mutation({
@@ -25,7 +33,17 @@ export const authApi = createApi({
                 }
             }
         }),
+        login: build.mutation({
+            query: (body: ILogin) => {
+                return {
+                    url: '/auth/login',
+                    method: 'post',
+                    body,
+                    credentials: 'include',
+                }
+            }
+        })
     })
 })
 
-export const { useRegistrationMutation } = authApi
+export const { useRegistrationMutation, useLoginMutation } = authApi

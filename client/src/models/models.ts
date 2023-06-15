@@ -45,3 +45,11 @@ export interface IRegistration {
     file: File;
 
 }
+
+export interface ILogin {
+
+    email: string;
+
+    password: string;
+
+}

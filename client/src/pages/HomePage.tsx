@@ -15,7 +15,6 @@ export const HomePage = () => {
         setDropdown(debounced.length > 2 && data?.length! > 0)
     }, [debounced, data])
 
-    console.log(data)
     return (
         <div className="flex justify-center pt-10 mx-auto h-screen w-screen">
             {isError && <p className="text-center text-red-600">Something went wrong...</p>}
