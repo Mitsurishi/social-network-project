@@ -43,12 +43,12 @@ export class AuthController {
     }
 
     @Get('/activate/:link')
-    @Redirect(process.env.CLIENT_URL)
-    async activateAccount(@Req() request: Request) {
+    async activateAccount(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
 
         const link = request.params.link;
         const activationLink = `${process.env.API_URL}/auth/activate/${link}`
-        return this.authService.activateAccount(activationLink);
+        await this.authService.activateAccount(activationLink);
+        return response.redirect(process.env.CLIENT_URL);
 
     }
 
@@ -56,9 +56,9 @@ export class AuthController {
     async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
 
         const refreshToken = request.cookies.refreshToken;
-        console.log(refreshToken);
         const result = await this.authService.refresh(refreshToken);
         response.cookie('refreshToken', result.tokens.refresh_token, { maxAge: tokenMaxAge, httpOnly: true });
+        console.log(result);
         return result;
 
     }

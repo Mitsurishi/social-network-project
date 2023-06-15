@@ -17,10 +17,13 @@ export class TokenService {
 
     async generateTokens(payload: TokenPayloadDto) {
 
+
         const accessToken = this.jwtService.sign(payload, {
-            expiresIn: '15m'
+            secret: process.env.JWT_ACCESS_SECRET,
+            expiresIn: '15s'
         });
         const refreshToken = this.jwtService.sign(payload, {
+            secret: process.env.JWT_REFRESH_SECRET,
             expiresIn: '30d'
         });
 
@@ -57,7 +60,8 @@ export class TokenService {
     validateAccessToken(accessToken: string) {
 
         try {
-            const result = this.jwtService.verify(accessToken, { secret: process.env.JWT_ACCESS_SECRET })
+            const result = this.jwtService.verify(accessToken, { secret: process.env.JWT_ACCESS_SECRET });
+            return result;
         } catch (error) {
             return null
         }
@@ -67,7 +71,9 @@ export class TokenService {
     validateRefreshToken(refreshToken: string) {
 
         try {
-            const result = this.jwtService.verify(refreshToken, { secret: process.env.JWT_REFRESH_SECRET })
+            console.log(process.env.JWT_REFRESH_SECRET);
+            const result = this.jwtService.verify(refreshToken, { secret: process.env.JWT_REFRESH_SECRET });
+            return result
         } catch (error) {
             return null
         }

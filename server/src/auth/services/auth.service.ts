@@ -94,7 +94,7 @@ export class AuthService {
             if (!result || !token) {
                 throw new UnauthorizedException(HttpStatus.UNAUTHORIZED)
             }
-            const user = await this.userRepository.findByPk(result.userId);
+            const user = await this.userRepository.findByPk(result.id);
             const payload = { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName }
             const tokens = await this.tokenService.generateTokens(payload);
             await this.tokenService.saveToken(user.id, tokens.refresh_token)
