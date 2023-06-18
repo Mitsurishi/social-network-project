@@ -58,7 +58,6 @@ export class AuthController {
         const refreshToken = request.cookies.refreshToken;
         const result = await this.authService.refresh(refreshToken);
         response.cookie('refreshToken', result.tokens.refresh_token, { maxAge: tokenMaxAge, httpOnly: true });
-        console.log(result);
         return result;
 
     }

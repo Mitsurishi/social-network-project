@@ -71,7 +71,6 @@ export class TokenService {
     validateRefreshToken(refreshToken: string) {
 
         try {
-            console.log(process.env.JWT_REFRESH_SECRET);
             const result = this.jwtService.verify(refreshToken, { secret: process.env.JWT_REFRESH_SECRET });
             return result
         } catch (error) {

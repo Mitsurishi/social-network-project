@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLoginMutation, useRegistrationMutation } from '../store/auth/auth.api';
+import { useLoginMutation, useRegistrationMutation } from '../services/auth/auth.api';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import FileUpload from '../components/FileUpload';
@@ -106,7 +106,7 @@ export const AuthPage = () => {
             navigate('/feed')
         }
 
-    }, [isLoginSuccess, loginData, isRegistrationSuccess, registrationData]);
+    }, [isLoginSuccess, loginData, isRegistrationSuccess, registrationData, dispatch, navigate]);
     useEffect(() => {
 
         if (isLoginError) {
@@ -116,7 +116,7 @@ export const AuthPage = () => {
             toast.error((registrationError as any).data.message)
         }
 
-    })
+    }, [isLoginError, isRegistrationError])
     return (
         <section className='h-screen w-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
             <div className='h-full flex justify-center items-center'>

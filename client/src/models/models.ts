@@ -48,6 +48,12 @@ export interface IUser {
 
     profilePicturePath: string;
 
+    friends: number[];
+
+    createdAt: Date;
+
+    updatedAt: Date;
+
 }
 
 export interface IRegistration {
