@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, UploadedFile, UseInterceptor
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/createPostDto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Post as PostModel } from 'src/models/post.model';
 
 @Controller('post')
 export class PostController {
@@ -10,7 +11,7 @@ export class PostController {
 
     @Post('/create')
     @UseInterceptors(FileInterceptor('file'))
-    async createPost(@UploadedFile() file: Express.Multer.File, @Body() createPostdto: CreatePostDto) {
+    async createPost(@UploadedFile() file: Express.Multer.File, @Body() createPostdto: CreatePostDto): Promise<PostModel> {
 
         const postPicture = file;
         return this.postService.createPost(postPicture, createPostdto);
@@ -18,21 +19,21 @@ export class PostController {
     }
 
     @Get('/posts')
-    async getFeedPosts() {
+    async getFeedPosts(): Promise<PostModel[]> {
 
         return this.postService.getFeedPosts();
 
     }
 
     @Get('/:userId/posts')
-    async getUserPosts(@Param('userId') userId: number) {
+    async getUserPosts(@Param('userId') userId: number): Promise<PostModel[]> {
 
         return this.postService.getUserPosts(userId);
 
     }
 
     @Patch('/:id/like')
-    async likeUnlikePost(@Param('id') id: number, @Body() userId: string) {
+    async likeUnlikePost(@Param('id') id: number, @Body() userId: string): Promise<[affectedCount: number]> {
 
         return this.postService.likeUnlikePost(id, userId);
 

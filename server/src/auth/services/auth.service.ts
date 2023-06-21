@@ -53,7 +53,7 @@ export class AuthService {
             await this.tokenService.saveToken(user.id, tokens.refresh_token)
             return { payload, tokens }
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+            throw new HttpException('Login failed. Check the accuracy of email and password', HttpStatus.BAD_REQUEST)
         }
 
     }

@@ -15,20 +15,20 @@ export class UserService {
 
     ) { }
 
-    async createUser(registrationDto: RegistrationDto, profilePicture, activationLink: string) {
+    async createUser(registrationDto: RegistrationDto, profilePicture, activationLink: string): Promise<User> {
 
         try {
-            const profilePicturePath = this.fileService.createFile(FileType.IMAGE, profilePicture)
+            const profilePicturePath = this.fileService.createFile(FileType.IMAGE, profilePicture);
             const hashPassword = await this.encryptPassword(registrationDto.password);
-            const user = await this.userRepository.create({ ...registrationDto, password: hashPassword, activationLink: activationLink, profilePicturePath: profilePicturePath })
+            const user = await this.userRepository.create({ ...registrationDto, password: hashPassword, activationLink: activationLink, profilePicturePath: profilePicturePath });
             return user;
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    async getAllUsers() {
+    async getAllUsers(): Promise<User[]> {
 
         const users = this.userRepository.findAll();
         return users;
@@ -38,26 +38,27 @@ export class UserService {
     async getUserById(userId: number): Promise<User> {
 
         try {
-            const user = await this.userRepository.findByPk(userId);
+            const user = await this.userRepository.findByPk(userId, { attributes: { exclude: ['password', 'email', 'isActivated', 'activationLink',] } });
             return user;
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+            throw new HttpException(error.message, HttpStatus.NOT_FOUND);
         }
 
     }
 
-    async getUserFriends(userId: number) {
+    async getUserFriends(userId: number): Promise<number[]> {
 
         try {
-            const friends = await this.userRepository.findByPk(userId, { attributes: ['friends'] })
-            return friends;
+            const user = await this.userRepository.findByPk(userId, { attributes: ['friends'] });
+            const result = user.friends;
+            return result;
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+            throw new HttpException(error.message, HttpStatus.NOT_FOUND);
         }
 
     }
 
-    async addRemoveFriend(userId: number, friendId: number) {
+    async addRemoveFriend(userId: number, friendId: number): Promise<HttpStatus> {
 
         try {
             const user = await this.userRepository.findByPk(userId);
@@ -71,27 +72,27 @@ export class UserService {
             }
             await user.save();
             await friend.save();
-            return HttpStatus.ACCEPTED
+            return HttpStatus.ACCEPTED;
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    async deleteUserById(id: number) {
+    async deleteUserById(id: number): Promise<number> {
         try {
             const profilePicture = await this.userRepository.findOne({ where: { id: id }, attributes: { include: ['profilePicturePath'] } })
             this.fileService.deleteFile(profilePicture.profilePicturePath);
             return await this.userRepository.destroy({ where: { id: id } });
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+            throw new HttpException(error.message, HttpStatus.NOT_FOUND);
         }
     }
 
     private async encryptPassword(password: string) {
 
-        const salt = await bcrypt.genSalt(10)
-        return bcrypt.hash(password, salt)
+        const salt = await bcrypt.genSalt(10);
+        return bcrypt.hash(password, salt);
 
     }
 

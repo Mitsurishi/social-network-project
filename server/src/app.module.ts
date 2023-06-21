@@ -26,7 +26,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       autoLoadModels: true
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, 'static'),
+      rootPath: path.resolve(__dirname, '..', 'static'),
     }),
     MailerModule.forRoot({
       transport: {

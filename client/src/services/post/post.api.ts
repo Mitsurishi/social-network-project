@@ -2,7 +2,7 @@ import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery,
 import { RootState } from '../../store/store'
 import { clearUser, setUser } from '../../store/auth/authSlice'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { IUser } from '../../models/models';
+import { IPost, IUser } from '../../models/models';
 
 const baseQuery = retry(fetchBaseQuery({
 
@@ -42,43 +42,27 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
 export const userApi = createApi({
 
-    reducerPath: 'userApi',
+    reducerPath: 'postApi',
     baseQuery: baseQueryWithReauth,
     endpoints: build => ({
-        getAllUsers: build.query<IUser[], void>({
+        getAllPosts: build.query<IPost[], void>({
             query: () => {
                 return {
-                    url: '/user/users',
+                    url: '/post/posts',
                     method: 'get',
                 }
-            },
+            }
         }),
-        getUser: build.query<IUser, number>({
+        getUsersPosts: build.query<IPost[], number>({
             query: (userId) => {
                 return {
-                    url: `/user/${userId}`,
+                    url: `/post/${userId}/posts`,
                     method: 'get'
                 }
-            },
-        }),
-        getUserFriends: build.query<number[], number>({
-            query: (userId) => {
-                return {
-                    url: `/user/${userId}/friends`,
-                    method: 'get'
-                }
-            },
-        }),
-        addRemoveFriend: build.query<number[], { userId: number, friendId: number }>({
-            query: ({ userId, friendId }) => {
-                return {
-                    url: `/user/${userId}/${friendId}`,
-                    method: 'patch'
-                }
-            },
-        }),
+            }
+        })
     }),
 
 })
 
-export const { useLazyGetAllUsersQuery, useLazyAddRemoveFriendQuery, useGetUserFriendsQuery, useGetUserQuery } = userApi;
+export const { useGetAllPostsQuery } = userApi;

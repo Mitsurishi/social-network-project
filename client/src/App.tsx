@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { setUser } from "./store/auth/authSlice";
 import { ProfilePage } from "./pages/ProfilePage";
 import { AuthRequired } from "./components/AuthRequired";
+import { FriendsPage } from "./pages/FriendsPage";
 
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
 
     dispatch(setUser(user));
 
-  }, [dispatch])
+  }, [dispatch, user])
 
   return (
     <>
@@ -27,6 +28,7 @@ function App() {
         <Route path='/auth' element={<AuthPage />} />
         <Route path='/feed' element={<AuthRequired token={user.token}><FeedPage /></AuthRequired>} />
         <Route path='/:id' element={<AuthRequired token={user.token}><ProfilePage /></AuthRequired>} />
+        <Route path='/friends' element={<AuthRequired token={user.token}><FriendsPage /></AuthRequired>} />
       </Routes>
       <ToastContainer />
     </>

@@ -56,6 +56,24 @@ export interface IUser {
 
 }
 
+export interface IPost {
+
+    id: number;
+
+    firstName: string;
+
+    lastName: string;
+
+    userPicturePath: string;
+
+    content?: string;
+
+    postPicturePath?: string;
+
+    likes: number[];
+
+}
+
 export interface IRegistration {
 
     email: string;

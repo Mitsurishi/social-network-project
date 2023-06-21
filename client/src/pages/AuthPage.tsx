@@ -103,7 +103,6 @@ export const AuthPage = () => {
                 lastName: registrationData.payload.lastName,
                 token: registrationData.tokens.access_token,
             }))
-            navigate('/feed')
         }
 
     }, [isLoginSuccess, loginData, isRegistrationSuccess, registrationData, dispatch, navigate]);
@@ -116,7 +115,7 @@ export const AuthPage = () => {
             toast.error((registrationError as any).data.message)
         }
 
-    }, [isLoginError, isRegistrationError])
+    }, [isLoginError, isRegistrationError, loginError, registrationError])
     return (
         <section className='h-screen w-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
             <div className='h-full flex justify-center items-center'>

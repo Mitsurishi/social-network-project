@@ -17,7 +17,9 @@ export class FileService {
         try {
             const fileExtension = file.originalname.split('.').pop();
             const fileName = uuid.v4() + '.' + fileExtension;
-            const filePath = path.resolve(__dirname, '..', 'static', type);
+            const filePath = path.resolve(__dirname, '..', '..', 'static', type);
+            console.log(__dirname)
+            console.log(filePath)
             if (!fs.existsSync(filePath)) {
                 fs.mkdirSync(filePath, { recursive: true });
             }
@@ -32,7 +34,7 @@ export class FileService {
     deleteFile(file: string) {
         try {
             const type = file.split('/').shift();
-            const filePath = path.resolve(__dirname, '..', 'static', type);
+            const filePath = path.resolve(__dirname, '..', '..', 'static', type);
             const fileName = file.split('/').pop();
             if (filePath && fileName) {
                 fs.unlinkSync(path.resolve(filePath, fileName))

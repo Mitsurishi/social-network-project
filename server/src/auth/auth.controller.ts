@@ -4,6 +4,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegistrationDto } from './dto/registration.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
+import { ServerResponce } from './interfaces/serverResponse';
 
 const tokenMaxAge: number = 30 * 24 * 60 * 60 * 1000;
 
@@ -14,7 +15,7 @@ export class AuthController {
 
     @Post('/registration')
     @UseInterceptors(FileInterceptor('file'))
-    async registration(@UploadedFile() file: Express.Multer.File, @Body() registrationDto: RegistrationDto, @Res({ passthrough: true }) response: Response) {
+    async registration(@UploadedFile() file: Express.Multer.File, @Body() registrationDto: RegistrationDto, @Res({ passthrough: true }) response: Response): Promise<ServerResponce> {
 
         const profilePicture = file
         const result = await this.authService.registration(registrationDto, profilePicture);
@@ -24,7 +25,7 @@ export class AuthController {
     }
 
     @Post('/login')
-    async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) response: Response) {
+    async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) response: Response): Promise<ServerResponce> {
 
         const result = await this.authService.login(loginDto);
         response.cookie('refreshToken', result.tokens.refresh_token, { maxAge: tokenMaxAge, httpOnly: true });
@@ -33,7 +34,7 @@ export class AuthController {
     }
 
     @Get('/logout')
-    async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
+    async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<number> {
 
         const refreshToken = request.cookies.refreshToken;
         const result = await this.authService.logout(refreshToken);
@@ -43,7 +44,7 @@ export class AuthController {
     }
 
     @Get('/activate/:link')
-    async activateAccount(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
+    async activateAccount(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<void> {
 
         const link = request.params.link;
         const activationLink = `${process.env.API_URL}/auth/activate/${link}`
@@ -53,7 +54,7 @@ export class AuthController {
     }
 
     @Get('/refresh')
-    async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
+    async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<ServerResponce> {
 
         const refreshToken = request.cookies.refreshToken;
         const result = await this.authService.refresh(refreshToken);
@@ -63,7 +64,7 @@ export class AuthController {
     }
 
     @Delete('/delete/:email')
-    async deleteAccount(@Param('email') email: string) {
+    async deleteAccount(@Param('email') email: string): Promise<number> {
 
         return this.authService.deleteAccount(email);
 
