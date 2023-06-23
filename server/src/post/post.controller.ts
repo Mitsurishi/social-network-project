@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/createPostDto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Post as PostModel } from 'src/models/post.model';
+import { JwtAccessGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAccessGuard)
 @Controller('post')
 export class PostController {
 
@@ -11,10 +13,10 @@ export class PostController {
 
     @Post('/create')
     @UseInterceptors(FileInterceptor('file'))
-    async createPost(@UploadedFile() file: Express.Multer.File, @Body() createPostdto: CreatePostDto): Promise<PostModel> {
+    async createPost(@Body() createPostDto: CreatePostDto, @UploadedFile() file?: Express.Multer.File): Promise<PostModel> {
 
-        const postPicture = file;
-        return this.postService.createPost(postPicture, createPostdto);
+        const postPicture = file
+        return this.postService.createPost(createPostDto, postPicture);
 
     }
 

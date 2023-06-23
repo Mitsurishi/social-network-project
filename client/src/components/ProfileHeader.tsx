@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { MyModal } from './MyModal';
 
 
@@ -20,7 +20,7 @@ interface ProfileHeaderProps {
 
 }
 
-export const ProfileHeader = (props: ProfileHeaderProps) => {
+export const ProfileHeader: FC<ProfileHeaderProps> = (props) => {
 
     const API_URL = 'http://localhost:8000';
     const [showMyModal, setShowMyModal] = useState(false);

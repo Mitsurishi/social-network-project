@@ -1,6 +1,5 @@
 import { LeftSideBar } from '../components/LeftSideBar';
 import { Navbar } from '../components/Navbar';
-import { useLazyGetAllUsersQuery } from '../services/user/user.api';
 
 export const FeedPage = () => {
 

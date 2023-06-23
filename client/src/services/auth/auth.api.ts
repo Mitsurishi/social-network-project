@@ -62,9 +62,6 @@ export const authApi = createApi({
                     body,
                 }
             },
-            transformResponse: (response: ServerResponce) => {
-                return response
-            },
         }),
         logout: build.query<number, void>({
             query: () => {

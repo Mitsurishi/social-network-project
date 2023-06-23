@@ -2,6 +2,6 @@ export class CreatePostDto {
 
     readonly userId: string;
 
-    readonly content: string;
+    readonly content?: string;
 
 }

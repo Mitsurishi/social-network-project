@@ -16,21 +16,32 @@ export class PostService {
 
     ) { }
 
-    async createPost(postPicture, createPostDto: CreatePostDto) {
+    async createPost(createPostDto: CreatePostDto, postPicture?) {
 
         try {
             const user = await this.userRepository.findByPk(createPostDto.userId)
-            const postPicturePath = this.fileService.createFile(FileType.IMAGE, postPicture);
+            if (postPicture) {
+                const postPicturePath = this.fileService.createFile(FileType.IMAGE, postPicture);
+                const post = await this.postRepository.create(
+                    {
+                        ...createPostDto,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        userPicturePath: user.profilePicturePath,
+                        postPicturePath: postPicturePath
+                    }
+                )
+                return post
+            }
             const post = await this.postRepository.create(
                 {
                     ...createPostDto,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     userPicturePath: user.profilePicturePath,
-                    postPicturePath: postPicturePath
                 }
             )
-            return post;
+            return post
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }

@@ -60,6 +60,8 @@ export interface IPost {
 
     id: number;
 
+    userId: number;
+
     firstName: string;
 
     lastName: string;

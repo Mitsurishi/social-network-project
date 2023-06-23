@@ -34,7 +34,7 @@ export const Navbar = () => {
     }, [isLogoutError, logoutError])
 
     return (
-        <nav className='px-5 shadow-md bg-gray-800 text-white border-b border-gray-700'>
+        <nav className='fixed w-full z-10 px-5 shadow-md bg-gray-800 text-white border-b border-gray-700'>
             <div className='container mx-auto m-w- flex justify-between items-center h-[60px]'>
                 <Link className='flex items-center font-bold text-lg h-full' to='/feed'>My social network</Link>
                 <div className='flex items-center h-full'>

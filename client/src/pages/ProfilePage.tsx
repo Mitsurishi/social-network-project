@@ -3,6 +3,7 @@ import { Navbar } from "../components/Navbar";
 import { LeftSideBar } from "../components/LeftSideBar";
 import { ProfileHeader } from "../components/ProfileHeader";
 import { useGetUserQuery } from "../services/user/user.api";
+import { PostContainer } from "../components/PostContainer";
 
 
 export const ProfilePage = () => {
@@ -14,19 +15,28 @@ export const ProfilePage = () => {
     return (
         <>
             <Navbar />
-            <div className='bg-gray-900 h-screen'>
-                <div className='container flex pt-4 mx-auto text-white'>
-                    <LeftSideBar />
-                    <ProfileHeader
-                        userId={data?.id}
-                        email={data?.email}
-                        firstName={data?.firstName}
-                        lastName={data?.lastName}
-                        age={data?.age}
-                        occupation={data?.occupation}
-                        profilePicturePath={data?.profilePicturePath}
-                    />
-                    <div>
+            <div className='bg-gray-900 pt-[60px]'>
+                <div className='py-4'>
+                    <div className='container mx-auto'>
+                        <LeftSideBar />
+                    </div>
+                    <div className='container flex pl-[164px] mx-auto text-white'>
+                        <div className='w-full'>
+                            <ProfileHeader
+                                userId={data?.id}
+                                email={data?.email}
+                                firstName={data?.firstName}
+                                lastName={data?.lastName}
+                                age={data?.age}
+                                occupation={data?.occupation}
+                                profilePicturePath={data?.profilePicturePath}
+                            />
+                            <div className='max-w-[600px]'>
+                                <PostContainer />
+                            </div>
+                        </div>
+                        <div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -30,8 +30,10 @@ export const AuthPage = () => {
     const [formValue, setFormValue] = useState(initialState);
     const [showRegister, setShowRegister] = useState(false);
     const [picture, setPicture] = useState(null);
+    const { email, password, confirmPassword, firstName, lastName, age, occupation } = formValue;
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
     const [login,
         {
             data: loginData,
@@ -40,6 +42,7 @@ export const AuthPage = () => {
             error: loginError
         }
     ] = useLoginMutation();
+
     const [registration,
         {
             data: registrationData,
@@ -48,16 +51,18 @@ export const AuthPage = () => {
             error: registrationError,
         }
     ] = useRegistrationMutation();
-    const { email, password, confirmPassword, firstName, lastName, age, occupation } = formValue;
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
         setFormValue({ ...formValue, [e.target.name]: e.target.value });
-
     }
+
     const handleRegistration = async () => {
 
         if (password !== confirmPassword) {
-            return toast.error("Passwords don't match")
+            return toast.error("Passwords don't match");
+        }
+        if (!picture) {
+            return toast.error('Please choose your profile picture');
         }
         if (email && password && confirmPassword && firstName && lastName && age && occupation && picture) {
             const formData = new FormData()
@@ -69,6 +74,8 @@ export const AuthPage = () => {
             formData.append('occupation', formValue.occupation);
             formData.append('file', picture);
             await registration(formData);
+        } else {
+            toast.error('Please fill all fields')
         }
 
     }
@@ -81,6 +88,7 @@ export const AuthPage = () => {
         }
 
     }
+
     useEffect(() => {
 
         if (isLoginSuccess && loginData) {
@@ -106,6 +114,7 @@ export const AuthPage = () => {
         }
 
     }, [isLoginSuccess, loginData, isRegistrationSuccess, registrationData, dispatch, navigate]);
+
     useEffect(() => {
 
         if (isLoginError) {
@@ -116,6 +125,7 @@ export const AuthPage = () => {
         }
 
     }, [isLoginError, isRegistrationError, loginError, registrationError])
+
     return (
         <section className='h-screen w-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
             <div className='h-full flex justify-center items-center'>

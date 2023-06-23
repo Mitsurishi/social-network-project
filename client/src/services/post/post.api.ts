@@ -2,7 +2,7 @@ import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery,
 import { RootState } from '../../store/store'
 import { clearUser, setUser } from '../../store/auth/authSlice'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { IPost, IUser } from '../../models/models';
+import { IPost } from '../../models/models';
 
 const baseQuery = retry(fetchBaseQuery({
 
@@ -16,7 +16,7 @@ const baseQuery = retry(fetchBaseQuery({
     },
     credentials: 'include',
 
-}), { maxRetries: 0 });
+}), { maxRetries: 1 });
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
 
@@ -40,11 +40,20 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
 }
 
-export const userApi = createApi({
+export const postApi = createApi({
 
     reducerPath: 'postApi',
     baseQuery: baseQueryWithReauth,
     endpoints: build => ({
+        createPost: build.mutation<IPost, FormData>({
+            query: (body) => {
+                return {
+                    url: '/post/create',
+                    method: 'post',
+                    body,
+                }
+            }
+        }),
         getAllPosts: build.query<IPost[], void>({
             query: () => {
                 return {
@@ -65,4 +74,4 @@ export const userApi = createApi({
 
 })
 
-export const { useGetAllPostsQuery } = userApi;
+export const { useGetAllPostsQuery, useGetUsersPostsQuery, useCreatePostMutation } = postApi;
