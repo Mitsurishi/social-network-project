@@ -1,18 +1,19 @@
-import { FC, useEffect, useState } from "react";
-import { useCreatePostMutation, useGetUsersPostsQuery } from "../services/post/post.api"
+import { FC, useEffect } from "react";
+import { useGetUsersPostsQuery } from "../services/post/post.api"
 import { PostItem } from "./PostItem";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { PostForm } from "./PostForm";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { selectPosts, setPost, setPosts } from "../store/post/postSlice";
-
+import { selectPosts, setPosts } from "../store/post/postSlice";
+import { selectAuth } from "../store/auth/authSlice";
 
 export const PostContainer: FC = () => {
 
-    const { id } = useParams();
+    const { id } = useParams<{ id?: string }>();
     const parsedId = Number(id);
-    const { posts } = useAppSelector(selectPosts)
+    const { posts } = useAppSelector(selectPosts);
+    const { id: userId } = useAppSelector(selectAuth);
 
     const {
         data: userPosts,
@@ -23,56 +24,6 @@ export const PostContainer: FC = () => {
     } = useGetUsersPostsQuery(parsedId);
 
     const dispatch = useAppDispatch();
-    const [content, setContent] = useState('');
-    const [picture, setPicture] = useState<File | null>(null);
-
-    const [createPost,
-        {
-            data: postData,
-            isSuccess: isPostSuccess,
-            isError: isPostError,
-            error: postError
-        }
-    ] = useCreatePostMutation();
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setContent(e.target.value);
-    }
-
-    const handlePost = async () => {
-
-        if (content.length !== 0 && !picture && id) {
-            const formData = new FormData();
-            formData.append('userId', id);
-            formData.append('content', content);
-            await createPost(formData);
-        }
-        if (content.length === 0 && picture && id) {
-            const formData = new FormData();
-            formData.append('userId', id);
-            formData.append('file', picture);
-            await createPost(formData);
-        }
-        if (content.length !== 0 && picture && id) {
-            const formData = new FormData();
-            formData.append('userId', id);
-            formData.append('content', content);
-            formData.append('file', picture);
-            await createPost(formData);
-        }
-        if (content.length === 0 && !picture) {
-            toast.error("Post can't be empty");
-        }
-
-    }
-
-    useEffect(() => {
-
-        if (isPostSuccess && postData) {
-            dispatch(setPost(postData));
-        }
-
-    }, [isPostSuccess, postData, dispatch])
 
     useEffect(() => {
 
@@ -90,17 +41,9 @@ export const PostContainer: FC = () => {
 
     }, [isPostsError, postsError])
 
-    useEffect(() => {
-
-        if (isPostError) {
-            toast.error((postError as any).data.message);
-        }
-
-    }, [isPostError, postError])
-
     if (!posts || posts.length === 0) {
         return <div className='mt-4'>
-            <PostForm content={content} setPicture={setPicture} updateContent={handleChange} handleAction={handlePost} />
+            {id && userId !== null && parsedId === userId && <PostForm />}
             <div className='text-center font-semibold text-white'>No posts at the moment.</div>
         </div>
     }
@@ -108,7 +51,7 @@ export const PostContainer: FC = () => {
     return (
         <>
             <div className='mt-4'>
-                <PostForm content={content} setPicture={setPicture} updateContent={handleChange} handleAction={handlePost} />
+                {id && userId !== null && parsedId === userId && <PostForm />}
                 {isPostsLoading && <div
                     className='mx-auto inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
                     role='status'>

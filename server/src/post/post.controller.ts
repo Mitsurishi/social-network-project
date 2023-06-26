@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/createPostDto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -38,6 +38,13 @@ export class PostController {
     async likeUnlikePost(@Param('id') id: number, @Body() userId: string): Promise<[affectedCount: number]> {
 
         return this.postService.likeUnlikePost(id, userId);
+
+    }
+
+    @Delete('/:postId/delete')
+    async deletePost(@Param('postId') postId: number): Promise<number> {
+
+        return this.postService.deletePost(postId);
 
     }
 

@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { IPost } from '../../models/models';
 
-const POST_KEY = 'post'
-
 export interface PostState {
 
     posts: IPost[];
@@ -43,19 +41,26 @@ export const postSlice = createSlice({
     reducers: {
         setPosts: (state, action: PayloadAction<PostState>) => {
             state.posts = action.payload.posts;
-            localStorage.setItem(POST_KEY, JSON.stringify(state.posts));
         },
         setPost: (state, action: PayloadAction<ActionData>) => {
+            state.posts.push(action.payload);
+        },
+        likeUnlikePost: (state, action: PayloadAction<ActionData>) => {
             const updatedPosts = state.posts.map((post) => {
-                if (post.id === action.payload.id) return { ...action.payload }
-                return post
+                if (post.id === action.payload.id) {
+                    return action.payload;
+                }
+                return post;
             });
             state.posts = updatedPosts;
-            localStorage.setItem(POST_KEY, JSON.stringify(state.posts));
-        }
+        },
+        removePost: (state, action: PayloadAction<number>) => {
+            state.posts = state.posts.filter((post) => post.id !== action.payload);
+        },
     }
+
 })
 
 export const selectPosts = (state: RootState) => state.posts;
-export const { setPosts, setPost } = postSlice.actions;
+export const { setPosts, setPost, likeUnlikePost, removePost } = postSlice.actions;
 export default postSlice.reducer;

@@ -92,28 +92,29 @@ export const AuthPage = () => {
     useEffect(() => {
 
         if (isLoginSuccess && loginData) {
-            toast.success('Logged successfully', {})
+            toast.success('Logged successfully', {});
             dispatch(setUser({
                 id: loginData.payload.id,
                 email: loginData.payload.email,
                 firstName: loginData.payload.firstName,
                 lastName: loginData.payload.lastName,
                 token: loginData.tokens.access_token,
-            }))
+            }));
             navigate('/feed')
         }
         if (isRegistrationSuccess && registrationData) {
-            toast.success(`Activation mail was sent to ${registrationData.payload.email}`, {})
+            toast.success(`Activation mail was sent to ${registrationData.payload.email}`, {});
             dispatch(setUser({
                 id: registrationData.payload.id,
                 email: registrationData.payload.email,
                 firstName: registrationData.payload.firstName,
                 lastName: registrationData.payload.lastName,
                 token: registrationData.tokens.access_token,
-            }))
+            }));
         }
+        setFormValue(initialState);
 
-    }, [isLoginSuccess, loginData, isRegistrationSuccess, registrationData, dispatch, navigate]);
+    }, [isLoginSuccess, loginData, isRegistrationSuccess, registrationData, dispatch, navigate, setFormValue]);
 
     useEffect(() => {
 
@@ -127,7 +128,7 @@ export const AuthPage = () => {
     }, [isLoginError, isRegistrationError, loginError, registrationError])
 
     return (
-        <section className='h-screen w-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
+        <section className='flex justify-center items-center min-h-screen w-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
             <div className='h-full flex justify-center items-center'>
                 <div className='bg-gray-800 py-8 px-6 text-white border-gray-950 rounded-2xl text-center min-w-[380px]'>
                     <h2 className='font-bold mb-4 text-4xl'>

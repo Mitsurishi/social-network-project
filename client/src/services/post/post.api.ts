@@ -69,9 +69,17 @@ export const postApi = createApi({
                     method: 'get'
                 }
             }
+        }),
+        deletePost: build.mutation<number, number>({
+            query: (id) => {
+                return {
+                    url: `post/${id}/delete`,
+                    method: 'delete',
+                }
+            }
         })
     }),
 
 })
 
-export const { useGetAllPostsQuery, useGetUsersPostsQuery, useCreatePostMutation } = postApi;
+export const { useGetAllPostsQuery, useGetUsersPostsQuery, useCreatePostMutation, useDeletePostMutation } = postApi;

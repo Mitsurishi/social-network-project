@@ -8,14 +8,14 @@ import { PostContainer } from "../components/PostContainer";
 
 export const ProfilePage = () => {
 
-    const { id } = useParams();
+    const { id } = useParams<{ id?: string }>();
     const parsedId = Number(id);
     const { data } = useGetUserQuery(parsedId);
 
     return (
         <>
             <Navbar />
-            <div className='bg-gray-900 pt-[60px]'>
+            <div className='bg-gray-900 pt-[60px] min-h-screen'>
                 <div className='py-4'>
                     <div className='container mx-auto'>
                         <LeftSideBar />

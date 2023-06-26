@@ -21,7 +21,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
     ConfigModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'postgres',
-      uri: process.env.PGURI,
+      host: process.env.POSTGRES_HOST,
+      port: Number(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
       models: [User, Post, Token],
       autoLoadModels: true
     }),

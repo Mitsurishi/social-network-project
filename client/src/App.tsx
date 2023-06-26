@@ -15,6 +15,7 @@ function App() {
 
   const dispatch = useAppDispatch();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
   useEffect(() => {
 
     dispatch(setUser(user));
@@ -23,14 +24,16 @@ function App() {
 
   return (
     <>
+      <ToastContainer />
       <Routes>
         <Route path='/' element={<Navigate to='/feed' />} />
         <Route path='/auth' element={<AuthPage />} />
-        <Route path='/feed' element={<AuthRequired token={user.token}><FeedPage /></AuthRequired>} />
-        <Route path='/:id' element={<AuthRequired token={user.token}><ProfilePage /></AuthRequired>} />
-        <Route path='/friends' element={<AuthRequired token={user.token}><FriendsPage /></AuthRequired>} />
-      </Routes>
-      <ToastContainer />
+        <Route element={<AuthRequired />}>
+          <Route path='/feed' element={<FeedPage />} />
+          <Route path='/:id' element={<ProfilePage />} />
+          <Route path='/friends' element={<FriendsPage />} />
+        </Route>
+      </Routes >
     </>
   )
 

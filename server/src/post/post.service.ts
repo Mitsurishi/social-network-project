@@ -88,4 +88,15 @@ export class PostService {
 
     }
 
+    async deletePost(postId: number) {
+
+        try {
+            const post = await this.postRepository.destroy({ where: { id: postId } });
+            return post;
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }

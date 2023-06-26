@@ -29,13 +29,13 @@ export const ProfileHeader: FC<ProfileHeaderProps> = (props) => {
     return (
         <div className='py-6 px-6 bg-gray-800 border border-gray-700 rounded-xl w-full'>
             <div className='flex items-center h-full'>
-                <div className='rounded-full overflow-hidden w-40 border-2 border-cyan-400 mr-4'>
-                    <img onClick={() => setShowMyModal(true)} className='hover:cursor-pointer' src={`${API_URL}/${props.profilePicturePath}`} alt="User's avatar" />
+                <div className='rounded-full overflow-hidden w-40 border-2 border-cyan-400 mr-4 aspect-ratio aspect-square'>
+                    <img onClick={() => setShowMyModal(true)} className='hover:cursor-pointer w-full h-full object-cover' src={`${API_URL}/${props.profilePicturePath}`} alt="User's avatar" />
                     <MyModal profilePicturePath={props.profilePicturePath} onClose={handleClose} visible={showMyModal} />
                 </div>
                 <div className='flex justify-between h-full w-full'>
                     <div className='flex flex-col justify-evenly items-center h-full'>
-                        <div className='flex text-xl font-semibold'>
+                        <div className='ml-2.5 flex text-xl w-full font-semibold'>
                             <p className='mr-1'>
                                 {props.firstName}
                             </p>
@@ -58,7 +58,6 @@ export const ProfileHeader: FC<ProfileHeaderProps> = (props) => {
                         <button className='px-4 py-2 rounded-xl bg-gray-600 font-semibold hover:bg-gray-500 transition-all'>Edit profile</button>
                     </div>
                 </div>
-
             </div>
         </div>
     )
