@@ -1,46 +1,34 @@
 import { FC, useState } from 'react';
 import { MyModal } from './MyModal';
+import { useParams } from 'react-router-dom';
+import { useGetUserQuery } from '../services/user/user.api';
 
+export const ProfileHeader: FC = () => {
 
-interface ProfileHeaderProps {
-
-    userId: number | undefined;
-
-    email: string | undefined;
-
-    firstName: string | undefined;
-
-    lastName: string | undefined;
-
-    age: string | undefined;
-
-    occupation: string | undefined;
-
-    profilePicturePath: string | undefined;
-
-}
-
-export const ProfileHeader: FC<ProfileHeaderProps> = (props) => {
-
-    const API_URL = 'http://localhost:8000';
+    const { id } = useParams<{ id?: string }>();
+    const parsedId = Number(id);
+    const { data } = useGetUserQuery(parsedId);
+    const API_URL = process.env.REACT_APP_API_URL;
     const [showMyModal, setShowMyModal] = useState(false);
     const handleClose = () => setShowMyModal(false);
+
+    if (!data) return <div className='text-center font-semibold text-white'>Profile not found.</div>
 
     return (
         <div className='py-6 px-6 bg-gray-800 border border-gray-700 rounded-xl w-full'>
             <div className='flex items-center h-full'>
-                <div className='rounded-full overflow-hidden w-40 border-2 border-cyan-400 mr-4 aspect-ratio aspect-square'>
-                    <img onClick={() => setShowMyModal(true)} className='hover:cursor-pointer w-full h-full object-cover' src={`${API_URL}/${props.profilePicturePath}`} alt="User's avatar" />
-                    <MyModal profilePicturePath={props.profilePicturePath} onClose={handleClose} visible={showMyModal} />
+                <div className='rounded-full overflow-hidden w-40 border-2 border-cyan-400 mr-4 aspect-square'>
+                    <img onClick={() => setShowMyModal(true)} className='hover:cursor-pointer w-full h-full object-cover' src={`${API_URL}/${data?.profilePicturePath}`} alt="User's avatar" />
+                    <MyModal picturePath={data.profilePicturePath} onClose={handleClose} visible={showMyModal} />
                 </div>
                 <div className='flex justify-between h-full w-full'>
                     <div className='flex flex-col justify-evenly items-center h-full'>
                         <div className='ml-2.5 flex text-xl w-full font-semibold'>
                             <p className='mr-1'>
-                                {props.firstName}
+                                {data.firstName}
                             </p>
                             <p>
-                                {props.lastName}
+                                {data.lastName}
                             </p>
                         </div>
                         <div className='flex items-center text-gray-300'>
@@ -48,10 +36,10 @@ export const ProfileHeader: FC<ProfileHeaderProps> = (props) => {
                                 <path strokeLinecap='round' strokeLinejoin='round' d='M15 10.5a3 3 0 11-6 0 3 3 0 016 0z' />
                                 <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z' />
                             </svg>
-                            <p>Country: {props.occupation}</p>
+                            <p>Country: {data.occupation}</p>
                         </div>
                         <div className='ml-2.5 flex w-full text-gray-300'>
-                            <p>Age: {props.age}</p>
+                            <p>Age: {data.age}</p>
                         </div>
                     </div>
                     <div className='flex items-center'>

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { FileService, FileType } from 'src/file/file.service';
 import { CreatePostDto } from './dto/createPostDto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -61,7 +61,12 @@ export class PostService {
     async getUserPosts(userId: number) {
 
         try {
-            return this.postRepository.findAll({ where: { userId: userId } });
+            const user = await this.userRepository.findByPk(userId);
+            if (!user) {
+                throw new NotFoundException
+            } else {
+                return this.postRepository.findAll({ where: { userId: userId } });
+            }
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.NOT_FOUND);
         }

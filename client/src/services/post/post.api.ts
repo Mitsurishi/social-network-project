@@ -6,7 +6,7 @@ import { IPost } from '../../models/models';
 
 const baseQuery = retry(fetchBaseQuery({
 
-    baseUrl: 'http://localhost:8000',
+    baseUrl: process.env.REACT_APP_API_URL,
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token
         if (token) {

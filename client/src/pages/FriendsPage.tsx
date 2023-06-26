@@ -1,7 +1,12 @@
+import { PageWrapper } from "../components/PageWrapper"
 
 
 export const FriendsPage = () => {
+
     return (
-        <div>FriendsPage</div>
+        <PageWrapper>
+
+        </PageWrapper>
     )
+
 }

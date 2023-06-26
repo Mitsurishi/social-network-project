@@ -1,8 +1,9 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useDeletePostMutation } from '../services/post/post.api';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { selectAuth } from '../store/auth/authSlice';
 import { removePost } from '../store/post/postSlice';
+import { MyModal } from './MyModal';
 
 
 interface PostItemProps {
@@ -27,8 +28,11 @@ interface PostItemProps {
 
 export const PostItem: FC<PostItemProps> = (props) => {
 
-    const API_URL = 'http://localhost:8000';
-    const CLIENT_URL = 'http://localhost:3000';
+    const API_URL = process.env.REACT_APP_API_URL;
+    const CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
+
+    const [showMyModal, setShowMyModal] = useState(false);
+    const handleClose = () => setShowMyModal(false);
 
     const dispatch = useAppDispatch();
     const { id } = useAppSelector(selectAuth);
@@ -76,7 +80,8 @@ export const PostItem: FC<PostItemProps> = (props) => {
                 </div>}
                 {props.postPicturePath &&
                     <div className='rounded-xl overflow-hidden mb-2'>
-                        <img src={`${API_URL}/${props.postPicturePath}`} alt='Post' />
+                        <img className='hover:cursor-pointer' src={`${API_URL}/${props.postPicturePath}`} alt='Post' />
+                        <MyModal onClose={handleClose} visible={showMyModal} picturePath={props.postPicturePath} />
                     </div>}
                 <div>
                     <button>

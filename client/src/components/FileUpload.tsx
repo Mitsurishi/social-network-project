@@ -1,5 +1,4 @@
 import React, { FC, useRef } from 'react';
-import { toast } from 'react-toastify';
 
 interface FileUploadProps {
 
@@ -17,7 +16,9 @@ const FileUpload: FC<FileUploadProps> = ({ setFile, accept, children }) => {
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && setFile) {
             setFile(e.target.files[0]);
-            toast.success('Picture set successfully. If you want to change it, click on button again.')
+        }
+        if (e.target.files?.length === 0 && setFile) {
+            setFile(null);
         }
     }
     return (

@@ -41,8 +41,12 @@ export const PostContainer: FC = () => {
 
     }, [isPostsError, postsError])
 
+    if (isPostsError || isPostsLoading) {
+        return null;
+    }
+
     if (!posts || posts.length === 0) {
-        return <div className='mt-4'>
+        return <div className='mt-4 max-w-[600px]'>
             {id && userId !== null && parsedId === userId && <PostForm />}
             <div className='text-center font-semibold text-white'>No posts at the moment.</div>
         </div>
@@ -50,7 +54,7 @@ export const PostContainer: FC = () => {
 
     return (
         <>
-            <div className='mt-4'>
+            <div className='mt-4 max-w-[600px]'>
                 {id && userId !== null && parsedId === userId && <PostForm />}
                 {isPostsLoading && <div
                     className='mx-auto inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
