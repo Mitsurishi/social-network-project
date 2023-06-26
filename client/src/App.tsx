@@ -9,6 +9,7 @@ import { setUser } from "./store/auth/authSlice";
 import { ProfilePage } from "./pages/ProfilePage";
 import { AuthRequired } from "./components/AuthRequired";
 import { FriendsPage } from "./pages/FriendsPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 
 function App() {
@@ -30,9 +31,10 @@ function App() {
         <Route path='/auth' element={<AuthPage />} />
         <Route element={<AuthRequired />}>
           <Route path='/feed' element={<FeedPage />} />
-          <Route path='/:id' element={<ProfilePage />} />
+          <Route path='/user/:id' element={<ProfilePage />} />
           <Route path='/friends' element={<FriendsPage />} />
         </Route>
+        <Route path='*' element={<NotFoundPage />} />
       </Routes >
     </>
   )

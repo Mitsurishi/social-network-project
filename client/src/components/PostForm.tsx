@@ -13,7 +13,15 @@ export const PostForm: FC = () => {
     const [content, setContent] = useState('');
     const [picture, setPicture] = useState<File | null>(null);
     const { id: userId } = useAppSelector(selectAuth);
-
+    /*  Попробую доделать позже. Хочу, чтобы кнопка отправки формы и прикрепления изображения появлялась только при клике на соот-й div. Столкнулся с проблемой, что фокус с элемента исчезает, если нажимаешь на дочерний элемент. Буду думать как пофиксить.
+        const [writePost, setWritePost] = useState(false);
+        const handleFocus = (e: React.FocusEvent<HTMLDivElement>) => {
+            setWritePost(true);
+        }
+        const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+            setWritePost(false);
+        }
+    */
     const [showMyModal, setShowMyModal] = useState(false);
     const handleClose = () => setShowMyModal(false);
 

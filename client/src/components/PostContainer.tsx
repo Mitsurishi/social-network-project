@@ -1,7 +1,6 @@
 import { FC, useEffect } from "react";
 import { useGetUsersPostsQuery } from "../services/post/post.api"
 import { PostItem } from "./PostItem";
-import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { PostForm } from "./PostForm";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
@@ -20,7 +19,6 @@ export const PostContainer: FC = () => {
         isLoading: isPostsLoading,
         isSuccess: isPostsSuccess,
         isError: isPostsError,
-        error: postsError
     } = useGetUsersPostsQuery(parsedId);
 
     const dispatch = useAppDispatch();
@@ -33,13 +31,6 @@ export const PostContainer: FC = () => {
 
     }, [isPostsSuccess, userPosts, dispatch])
 
-    useEffect(() => {
-
-        if (isPostsError) {
-            toast.error((postsError as any).data.message);
-        }
-
-    }, [isPostsError, postsError])
 
     if (isPostsError || isPostsLoading) {
         return null;

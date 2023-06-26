@@ -31,11 +31,12 @@ export const PostItem: FC<PostItemProps> = (props) => {
     const API_URL = process.env.REACT_APP_API_URL;
     const CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
 
-    const [showMyModal, setShowMyModal] = useState(false);
-    const handleClose = () => setShowMyModal(false);
 
-    const dispatch = useAppDispatch();
+    const [showMyModal, setShowMyModal] = useState(false);
     const { id } = useAppSelector(selectAuth);
+    const dispatch = useAppDispatch();
+
+    const handleClose = () => setShowMyModal(false);
 
     const [deletePost, { isSuccess: isDeleteSuccess }
     ] = useDeletePostMutation();
@@ -58,11 +59,11 @@ export const PostItem: FC<PostItemProps> = (props) => {
                 <div className='flex justify-between items-center'>
                     <div className='flex w-full mb-2'>
                         <div className='rounded-full overflow-hidden w-12 mr-4 aspect-square'>
-                            <a href={`${CLIENT_URL}/${props.userId}`}>
+                            <a href={`${CLIENT_URL}/user/${props.userId}`}>
                                 <img src={`${API_URL}/${props.userPicturePath}`} alt="User's avatar" className='w-full h-full object-cover' />
                             </a>
                         </div>
-                        <a className='h-fit' href={`${CLIENT_URL}/${props.userId}`}>
+                        <a className='h-fit' href={`${CLIENT_URL}/user/${props.userId}`}>
                             <div className='flex justify-between items-center font-semibold'>
                                 <p className='mr-1'>{props.firstName}</p>
                                 <p>{props.lastName}</p>
