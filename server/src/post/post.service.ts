@@ -4,6 +4,7 @@ import { CreatePostDto } from './dto/createPostDto';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/models/user.model';
 import { Post } from 'src/models/post.model';
+import { LikeUnlikeDto } from './dto/likeUnlikeDto';
 
 @Injectable()
 export class PostService {
@@ -63,7 +64,7 @@ export class PostService {
         try {
             const user = await this.userRepository.findByPk(userId);
             if (!user) {
-                throw new NotFoundException
+                throw new NotFoundException;
             } else {
                 return this.postRepository.findAll({ where: { userId: userId } });
             }
@@ -73,19 +74,19 @@ export class PostService {
 
     }
 
-    async likeUnlikePost(postId: number, userId) {
+    async likeUnlikePost(postId: number, likeUnlikeDto: LikeUnlikeDto) {
 
         try {
-            userId = userId.userId
-            const post = await this.postRepository.findByPk(postId)
-            const isLiked = post.likes.includes(userId)
+            const post = await this.postRepository.findByPk(postId, { attributes: ['likes'] });
+            const isLiked = post.likes.includes(likeUnlikeDto.userId);
             if (isLiked) {
-                post.likes = post.likes.filter((id) => id !== userId);
+                post.likes = post.likes.filter((id) => id !== likeUnlikeDto.userId);
             } else {
-                post.likes.push(userId);
+                post.likes.push(likeUnlikeDto.userId);
             }
             const likes = post.likes;
-            const updatedPost = await this.postRepository.update({ likes }, { where: { id: postId } });
+            await this.postRepository.update({ likes }, { where: { id: postId } });
+            const updatedPost = await this.postRepository.findByPk(postId);
             return updatedPost;
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.NOT_FOUND);

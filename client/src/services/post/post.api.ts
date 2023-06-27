@@ -2,7 +2,7 @@ import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery,
 import { RootState } from '../../store/store'
 import { clearUser, setUser } from '../../store/auth/authSlice'
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { IPost } from '../../models/models';
+import { IPost, LikeUnlikePost } from '../../models/models';
 
 const baseQuery = retry(fetchBaseQuery({
 
@@ -77,9 +77,18 @@ export const postApi = createApi({
                     method: 'delete',
                 }
             }
+        }),
+        likeUnlikePost: build.mutation<IPost, LikeUnlikePost>({
+            query: (body) => {
+                return {
+                    url: `post/${body.postId}/like`,
+                    method: 'put',
+                    body: { userId: body.userId }
+                }
+            }
         })
     }),
 
 })
 
-export const { useGetAllPostsQuery, useGetUsersPostsQuery, useCreatePostMutation, useDeletePostMutation } = postApi;
+export const { useGetAllPostsQuery, useGetUsersPostsQuery, useCreatePostMutation, useDeletePostMutation, useLikeUnlikePostMutation } = postApi;

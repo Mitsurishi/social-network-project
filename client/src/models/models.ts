@@ -76,6 +76,14 @@ export interface IPost {
 
 }
 
+export interface LikeUnlikePost {
+
+    postId: number;
+
+    userId: number;
+
+}
+
 export interface IRegistration {
 
     email: string;

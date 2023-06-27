@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react';
-import { useDeletePostMutation } from '../services/post/post.api';
+import { useDeletePostMutation, useLikeUnlikePostMutation } from '../services/post/post.api';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { selectAuth } from '../store/auth/authSlice';
-import { removePost } from '../store/post/postSlice';
+import { likeUnlikePost, removePost } from '../store/post/postSlice';
 import { MyModal } from './MyModal';
 
 
@@ -38,12 +38,28 @@ export const PostItem: FC<PostItemProps> = (props) => {
 
     const handleClose = () => setShowMyModal(false);
 
+    const [likeUnlike, { data: updatedPost, isSuccess: isLikeUnlikeSuccess }] = useLikeUnlikePostMutation();
+    const handleLikeUnlike = async () => {
+
+        if (id && props.postId)
+            await likeUnlike({ userId: id, postId: props.postId })
+
+    }
+
     const [deletePost, { isSuccess: isDeleteSuccess }
     ] = useDeletePostMutation();
 
     const handleDelete = async () => {
         await deletePost(props.postId);
     }
+
+    useEffect(() => {
+
+        if (isLikeUnlikeSuccess && updatedPost) {
+            dispatch(likeUnlikePost(updatedPost));
+        }
+
+    }, [isLikeUnlikeSuccess, updatedPost, dispatch])
 
     useEffect(() => {
 
@@ -85,11 +101,13 @@ export const PostItem: FC<PostItemProps> = (props) => {
                         <MyModal onClose={handleClose} visible={showMyModal} picturePath={props.postPicturePath} />
                     </div>}
                 <div>
-                    <button>
-                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-6 h-6'>
+                    <button className='flex justify-between items-center' onClick={() => handleLikeUnlike()}>
+                        {(id && props.likes?.includes(id)) ? <svg xmlns='http://www.w3.org/2000/svg' fill='true' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-6 h-6 text-cyan-500 fill-cyan-500'>
                             <path strokeLinecap='round' strokeLinejoin='round' d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z' />
-                        </svg>
-                        {props.likes && (props.likes.length !== 0) && <p>{props.likes.length}</p>}
+                        </svg> : <svg xmlns='http://www.w3.org/2000/svg' fill='true' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-6 h-6 fill-white'>
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z' />
+                        </svg>}
+                        {props.likes && (props.likes.length !== 0) && <p className='ml-1'>{props.likes.length}</p>}
                     </button>
                 </div>
             </div >

@@ -8,26 +8,6 @@ export interface PostState {
 
 }
 
-interface ActionData {
-
-    id: number;
-
-    userId: number;
-
-    firstName: string;
-
-    lastName: string;
-
-    userPicturePath: string;
-
-    content?: string;
-
-    postPicturePath?: string;
-
-    likes: number[];
-
-}
-
 const initialState: PostState = {
 
     posts: [],
@@ -42,10 +22,10 @@ export const postSlice = createSlice({
         setPosts: (state, action: PayloadAction<PostState>) => {
             state.posts = action.payload.posts;
         },
-        setPost: (state, action: PayloadAction<ActionData>) => {
+        setPost: (state, action: PayloadAction<IPost>) => {
             state.posts.push(action.payload);
         },
-        likeUnlikePost: (state, action: PayloadAction<ActionData>) => {
+        likeUnlikePost: (state, action: PayloadAction<IPost>) => {
             const updatedPosts = state.posts.map((post) => {
                 if (post.id === action.payload.id) {
                     return action.payload;
@@ -57,10 +37,13 @@ export const postSlice = createSlice({
         removePost: (state, action: PayloadAction<number>) => {
             state.posts = state.posts.filter((post) => post.id !== action.payload);
         },
+        clearPosts: (state) => {
+            state.posts = [];
+        }
     }
 
 })
 
 export const selectPosts = (state: RootState) => state.posts;
-export const { setPosts, setPost, likeUnlikePost, removePost } = postSlice.actions;
+export const { setPosts, setPost, likeUnlikePost, removePost, clearPosts } = postSlice.actions;
 export default postSlice.reducer;

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { clearUser, selectAuth } from '../store/auth/authSlice';
 import { useEffect } from 'react';
+import { clearPosts } from '../store/post/postSlice';
 
 export const Navbar = () => {
 
@@ -21,6 +22,7 @@ export const Navbar = () => {
         if (isLogoutSuccess) {
             toast.success('Logged out successfully', {});
             dispatch(clearUser());
+            dispatch(clearPosts());
             navigate('/auth');
         }
 
